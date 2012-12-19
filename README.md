@@ -1,9 +1,9 @@
 cube
 ====
-Low and behold
+Low and beholt
 
        __________
-      /|        /|  v1.3beta
+      /|        /|  v1.3 beta 3
      / |       / |
     /__|______/  |  - 50% more mass distribution
     |  |______|__|  - Increased right angle support
