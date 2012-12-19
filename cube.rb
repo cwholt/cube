@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
-require "colorize"
+require "colorize" # gem install colorize
+require "terminfo" # gem install ruby-terminfo
 
-Cube = %Q{
+cube = %Q{
   MERRY CHRISTMAS
      __________
     /|        /|
@@ -14,24 +15,31 @@ Cube = %Q{
     #iMPULSE
 }.split("\n")
 
-def clear
-  puts "\e[2J\e[f"
-end
+def enjoy(cube)
+  offset, mode = 0, 1
 
-offset, mode = 0, 1
+  loop do
 
-loop do
-  clear
-  
-  mode = 0 if offset == 55
-  mode = 1 if offset == 0
-  
-  offset = mode == 1 ? offset + 1 : offset - 1
-  
-  _cube = Cube.map do |c|
-    ' ' * offset + c
+    # clear screen
+    puts "\e[2J\e[f"
+
+    # alter left/right modes -- allow for dynamic window width
+    mode = 0 if offset == (TermInfo.screen_size[1] - cube.collect{|c| c.length }.max)
+    mode = 1 if offset == 0
+
+    # modify the offset
+    offset = mode == 1 ? offset + 1 : offset - 1
+
+    # only do the multiplication once.
+    spacing = ' ' * offset
+
+    # puts the cube w/ color!
+    puts cube.collect{ |c| spacing + c }.join("\n").colorize(String.colors[offset % String.colors.length])
+
+    # enjoy christmas cheer and sleep for a bit.
+    sleep 0.0275
+
   end
-  
-  puts _cube.join("\n").colorize(String.colors.shuffle.sample)
-  sleep 0.0275
 end
+
+enjoy(cube)
